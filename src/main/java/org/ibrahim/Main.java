@@ -1,5 +1,6 @@
 package org.ibrahim;
 
+import org.apache.commons.cli.HelpFormatter;
 import org.ibrahim.business.MostActiveCookieFinder;
 import org.ibrahim.cli.CommandParser;
 import org.ibrahim.cli.HelpPrinter;
@@ -13,7 +14,8 @@ import org.ibrahim.service.CookieService;
 public class Main {
     public static void main(String[] args) {
         try {
-            HelpPrinter helpPrinter = new HelpPrinterImpl();
+            HelpFormatter helpFormatter = new HelpFormatter();
+            HelpPrinter helpPrinter = new HelpPrinterImpl(helpFormatter);
             CommandParser commandParser = new CommandParser(helpPrinter);
             CookieParser cookieParser = new CookieParser();
             MostActiveCookieFinder mostActiveCookieFinder = new MostActiveCookieFinder(cookieParser);

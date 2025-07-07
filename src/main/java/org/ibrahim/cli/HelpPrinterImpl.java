@@ -17,15 +17,22 @@ import org.slf4j.LoggerFactory;
  */
 public class HelpPrinterImpl implements HelpPrinter {
     String COMMAND_LINE_SYNTAX = "cookie-cutter -d DATE -f FILENAME";
-    private final HelpFormatter helpFormatter = new HelpFormatter();
-    private static final Logger logger = LoggerFactory.getLogger(HelpPrinterImpl.class);
+    private final HelpFormatter helpFormatter;
+    private  final Logger logger = LoggerFactory.getLogger(HelpPrinterImpl.class);
+
+    /**
+     * Constructs a HelpPrinterImpl with a default HelpFormatter and logger.
+     */
+    public HelpPrinterImpl(HelpFormatter helpFormatter) {
+        this.helpFormatter = helpFormatter;
+    }
 
     /**
      * Prints the help message for the application with the given options.
      * @param options the CLI options to display in the help message
      */
     public void printHelp(Options options) {
-        logger.info("Printing help message with options: {}", options.getOptions());
+        logger.info("Parsing help options and printing help message");
         helpFormatter.printHelp(COMMAND_LINE_SYNTAX, options);
     }
 }
