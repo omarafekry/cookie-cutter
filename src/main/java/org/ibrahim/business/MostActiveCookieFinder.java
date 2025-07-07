@@ -2,16 +2,15 @@ package org.ibrahim.business;
 
 import org.ibrahim.io.CookieParser;
 import org.ibrahim.model.Cookie;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Business logic for finding the most active cookies for a given date from a CSV log file.
@@ -54,14 +53,13 @@ public class MostActiveCookieFinder {
   /**
    * Parses and counts the occurrences of each cookie for the specified date.
    * Only cookies matching the given date (UTC, yyyy-MM-dd) are counted.
-   *
    * @param filename the path to the CSV file
    * @param date the date to filter cookies by
    * @return a map of Cookie to its count for the given date
    */
   private Map<Cookie, Integer> countCookiesOnDate(String filename, LocalDate date) {
     logger.debug("Counting cookies for file: {} and date: {}", filename, date);
-    Map<Cookie, Integer> cookieCount = new HashMap<>();
+    Map<Cookie, Integer> cookieCount = new LinkedHashMap<>();
     Consumer<Cookie> cookieProcessor = cookie -> {
       LocalDate cookieDate = cookie.getTimestamp().atZone(ZoneOffset.UTC).toLocalDate();
       if (cookieDate.equals(date)) {
@@ -92,12 +90,8 @@ public class MostActiveCookieFinder {
    * @return a list of cookies with the given count
    */
   private List<Cookie> findCookiesWithCount(Map<Cookie, Integer> cookieCount, int max) {
-    List<Cookie> mostActive = new ArrayList<>();
-    for (Map.Entry<Cookie, Integer> entry : cookieCount.entrySet()) {
-      if (entry.getValue() == max) {
-        mostActive.add(entry.getKey());
-      }
-    }
-    return mostActive;
+    return cookieCount.entrySet().stream()
+        .filter(entry -> entry.getValue() == max)
+        .map(Map.Entry::getKey).toList();
   }
 }
